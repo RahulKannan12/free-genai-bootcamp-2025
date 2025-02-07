@@ -1,4 +1,7 @@
-### Step 1
+## Machine Configuration 
+
+Mac M1 16 GB
+
 
 ## Install Ollama 
 
