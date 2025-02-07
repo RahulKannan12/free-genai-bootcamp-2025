@@ -8,7 +8,7 @@ ibm-granite/granite-3.1-8b-instruct
 
 ## Model Size
 
-8 bn
+2 / 8 bn
 
 ## Notes
 
