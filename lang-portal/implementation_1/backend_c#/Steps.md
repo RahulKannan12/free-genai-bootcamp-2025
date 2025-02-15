@@ -8,16 +8,16 @@
 
 ## Database Setup
 
-- [ ] Create the SQLite database `words.db` in the root of the project folder
-- [ ] Define the Entity Framework Core models for the database schema
-  - [ ] Words
-  - [ ] WordsGroups
-  - [ ] Groups
-  - [ ] StudySessions
-  - [ ] StudyActivities
-  - [ ] WordReviewItems
-- [ ] Configure the DbContext for Entity Framework Core
-- [ ] Use the code-first approach to create and migrate the database
+- [x] Create the SQLite database `words.db` in the root of the project folder
+- [x] Define the Entity Framework Core models for the database schema
+  - [x] Words
+  - [x] WordsGroups
+  - [x] Groups
+  - [x] StudySessions
+  - [x] StudyActivities
+  - [x] WordReviewItems
+- [x] Configure the DbContext for Entity Framework Core
+- [x] Use the code-first approach to create and migrate the database
 
 ## API Endpoints
 
