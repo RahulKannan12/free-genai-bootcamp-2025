@@ -23,6 +23,8 @@ The company wants you to explore the effort it would take to run the AI workload
 
     - Outcome - How megaservice orchestrated multiple services together, document it
 
+    - [Result](task-2/readme.md)
+
 3. Final documentation
 
     - Outcome - Make a tutorial or  techincal documentation on overall understanding
