@@ -8,3 +8,6 @@
 
 
 ## Technical uncertainties
+
+- Backend implementation was so ease with my comfortable language (c#), I used the same method you and Ryan, step by step instructions and ticking off the respective tasks once done
+- there are few implications in choosing the right package version on external dependencies, needs manual intervention
