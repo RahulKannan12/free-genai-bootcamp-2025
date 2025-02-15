@@ -17,6 +17,8 @@ The company wants you to explore the effort it would take to run the AI workload
 
     - Outcome - This will give you a basic sketch on how OPEA comps are structured & document it
 
+    - [Result](task-1/readme.md)
+
 2. Try orchestrating multiple services together - Choose a megaservice and try deploying in local machine
 
     - Outcome - How megaservice orchestrated multiple services together, document it
