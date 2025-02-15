@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("LangPortalBackend")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+086b72ffcb0b5b95d6578fbd8f29e9c22ddeb5e5")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+f5a0904db53893204a4b84815a032b4969cca642")]
 [assembly: System.Reflection.AssemblyProductAttribute("LangPortalBackend")]
 [assembly: System.Reflection.AssemblyTitleAttribute("LangPortalBackend")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
