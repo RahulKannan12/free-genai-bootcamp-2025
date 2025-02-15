@@ -1,0 +1,35 @@
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.5.2.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "lang-portal", "lang-portal", "{565706AF-B8CE-4F16-7E1F-A2BE8B731F45}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "implementation_1", "implementation_1", "{E924504A-B973-A141-7C0F-18A7AA5C8BBD}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "backend_c#", "backend_c#", "{DBEC5128-BABA-67E3-E31C-2E75D6722301}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LangPortalBackend", "lang-portal\implementation_1\backend_c#\LangPortalBackend\LangPortalBackend.csproj", "{BEA185FE-65C8-8C22-C87A-90FB4AE81F12}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{BEA185FE-65C8-8C22-C87A-90FB4AE81F12}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BEA185FE-65C8-8C22-C87A-90FB4AE81F12}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BEA185FE-65C8-8C22-C87A-90FB4AE81F12}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BEA185FE-65C8-8C22-C87A-90FB4AE81F12}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{E924504A-B973-A141-7C0F-18A7AA5C8BBD} = {565706AF-B8CE-4F16-7E1F-A2BE8B731F45}
+		{DBEC5128-BABA-67E3-E31C-2E75D6722301} = {E924504A-B973-A141-7C0F-18A7AA5C8BBD}
+		{BEA185FE-65C8-8C22-C87A-90FB4AE81F12} = {DBEC5128-BABA-67E3-E31C-2E75D6722301}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {9A371185-5075-40B9-80C4-F59C1F394803}
+	EndGlobalSection
+EndGlobal
