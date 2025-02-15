@@ -1,0 +1,32 @@
+[
+    {
+        "WordId": 1,
+        "StudySessionId": 1,
+        "Correct": true,
+        "CreatedAt": "2025-02-15T00:00:00"
+    },
+    {
+        "WordId": 2,
+        "StudySessionId": 2,
+        "Correct": false,
+        "CreatedAt": "2025-02-15T00:00:00"
+    },
+    {
+        "WordId": 3,
+        "StudySessionId": 3,
+        "Correct": true,
+        "CreatedAt": "2025-02-15T00:00:00"
+    },
+    {
+        "WordId": 4,
+        "StudySessionId": 4,
+        "Correct": false,
+        "CreatedAt": "2025-02-15T00:00:00"
+    },
+    {
+        "WordId": 5,
+        "StudySessionId": 5,
+        "Correct": true,
+        "CreatedAt": "2025-02-15T00:00:00"
+    }
+]

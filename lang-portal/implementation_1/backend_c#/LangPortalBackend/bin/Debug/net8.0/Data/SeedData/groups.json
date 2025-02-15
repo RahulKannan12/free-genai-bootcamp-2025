@@ -1,0 +1,30 @@
+[
+    {
+        "Id": 1,
+        "Name": "Greetings"
+    },
+    {
+        "Id": 2,
+        "Name": "Expressions"
+    },
+    {
+        "Id": 3,
+        "Name": "Farewells"
+    },
+    {
+        "Id": 4,
+        "Name": "Requests"
+    },
+    {
+        "Id": 5,
+        "Name": "Affirmations"
+    },
+    {
+        "Id": 6,
+        "Name": "Negations"
+    },
+    {
+        "Id": 7,
+        "Name": "Apologies"
+    }
+]

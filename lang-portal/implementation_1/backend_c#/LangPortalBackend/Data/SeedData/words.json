@@ -1,0 +1,72 @@
+[
+    {
+        "Id": 1,
+        "Japanese": "こんにちは",
+        "Romaji": "konnichiwa",
+        "English": "hello",
+        "Parts": "greeting"
+    },
+    {
+        "Id": 2,
+        "Japanese": "ありがとう",
+        "Romaji": "arigatou",
+        "English": "thank you",
+        "Parts": "expression"
+    },
+    {
+        "Id": 3,
+        "Japanese": "さようなら",
+        "Romaji": "sayounara",
+        "English": "goodbye",
+        "Parts": "farewell"
+    },
+    {
+        "Id": 4,
+        "Japanese": "おはよう",
+        "Romaji": "ohayou",
+        "English": "good morning",
+        "Parts": "greeting"
+    },
+    {
+        "Id": 5,
+        "Japanese": "こんばんは",
+        "Romaji": "konbanwa",
+        "English": "good evening",
+        "Parts": "greeting"
+    },
+    {
+        "Id": 6,
+        "Japanese": "すみません",
+        "Romaji": "sumimasen",
+        "English": "excuse me",
+        "Parts": "apology"
+    },
+    {
+        "Id": 7,
+        "Japanese": "はい",
+        "Romaji": "hai",
+        "English": "yes",
+        "Parts": "affirmation"
+    },
+    {
+        "Id": 8,
+        "Japanese": "いいえ",
+        "Romaji": "iie",
+        "English": "no",
+        "Parts": "negation"
+    },
+    {
+        "Id": 9,
+        "Japanese": "お願いします",
+        "Romaji": "onegaishimasu",
+        "English": "please",
+        "Parts": "request"
+    },
+    {
+        "Id": 10,
+        "Japanese": "お疲れ様です",
+        "Romaji": "otsukaresama desu",
+        "English": "thank you for your hard work",
+        "Parts": "expression"
+    }
+]

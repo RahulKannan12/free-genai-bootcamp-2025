@@ -1,0 +1,32 @@
+[
+    {
+        "Id": 1,
+        "GroupId": 1,
+        "CreatedAt": "2025-02-15T00:00:00",
+        "StudyActivityId": 1
+    },
+    {
+        "Id": 2,
+        "GroupId": 2,
+        "CreatedAt": "2025-02-15T00:00:00",
+        "StudyActivityId": 2
+    },
+    {
+        "Id": 3,
+        "GroupId": 3,
+        "CreatedAt": "2025-02-15T00:00:00",
+        "StudyActivityId": 3
+    },
+    {
+        "Id": 4,
+        "GroupId": 4,
+        "CreatedAt": "2025-02-15T00:00:00",
+        "StudyActivityId": 4
+    },
+    {
+        "Id": 5,
+        "GroupId": 5,
+        "CreatedAt": "2025-02-15T00:00:00",
+        "StudyActivityId": 5
+    }
+]

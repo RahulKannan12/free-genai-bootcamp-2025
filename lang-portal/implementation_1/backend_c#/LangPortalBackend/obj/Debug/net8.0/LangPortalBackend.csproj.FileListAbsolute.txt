@@ -130,3 +130,16 @@
 /Users/rahul.kannan/Rahul Workspace/personal-projects/free-genai-bootcamp-2025/lang-portal/implementation_1/backend_c#/LangPortalBackend/obj/Debug/net8.0/LangPortalBackend.pdb
 /Users/rahul.kannan/Rahul Workspace/personal-projects/free-genai-bootcamp-2025/lang-portal/implementation_1/backend_c#/LangPortalBackend/obj/Debug/net8.0/LangPortalBackend.genruntimeconfig.cache
 /Users/rahul.kannan/Rahul Workspace/personal-projects/free-genai-bootcamp-2025/lang-portal/implementation_1/backend_c#/LangPortalBackend/obj/Debug/net8.0/ref/LangPortalBackend.dll
+/Users/rahul.kannan/Rahul Workspace/personal-projects/free-genai-bootcamp-2025/lang-portal/implementation_1/backend_c#/LangPortalBackend/bin/Debug/net8.0/xunit.abstractions.dll
+/Users/rahul.kannan/Rahul Workspace/personal-projects/free-genai-bootcamp-2025/lang-portal/implementation_1/backend_c#/LangPortalBackend/bin/Debug/net8.0/Data/SeedData/groups.json
+/Users/rahul.kannan/Rahul Workspace/personal-projects/free-genai-bootcamp-2025/lang-portal/implementation_1/backend_c#/LangPortalBackend/bin/Debug/net8.0/Data/SeedData/study_activities.json
+/Users/rahul.kannan/Rahul Workspace/personal-projects/free-genai-bootcamp-2025/lang-portal/implementation_1/backend_c#/LangPortalBackend/bin/Debug/net8.0/Data/SeedData/study_sessions.json
+/Users/rahul.kannan/Rahul Workspace/personal-projects/free-genai-bootcamp-2025/lang-portal/implementation_1/backend_c#/LangPortalBackend/bin/Debug/net8.0/Data/SeedData/words.json
+/Users/rahul.kannan/Rahul Workspace/personal-projects/free-genai-bootcamp-2025/lang-portal/implementation_1/backend_c#/LangPortalBackend/bin/Debug/net8.0/Data/SeedData/word_review_items.json
+/Users/rahul.kannan/Rahul Workspace/personal-projects/free-genai-bootcamp-2025/lang-portal/implementation_1/backend_c#/LangPortalBackend/bin/Debug/net8.0/xunit.runner.visualstudio.testadapter.dll
+/Users/rahul.kannan/Rahul Workspace/personal-projects/free-genai-bootcamp-2025/lang-portal/implementation_1/backend_c#/LangPortalBackend/bin/Debug/net8.0/Castle.Core.dll
+/Users/rahul.kannan/Rahul Workspace/personal-projects/free-genai-bootcamp-2025/lang-portal/implementation_1/backend_c#/LangPortalBackend/bin/Debug/net8.0/Microsoft.EntityFrameworkCore.InMemory.dll
+/Users/rahul.kannan/Rahul Workspace/personal-projects/free-genai-bootcamp-2025/lang-portal/implementation_1/backend_c#/LangPortalBackend/bin/Debug/net8.0/Moq.dll
+/Users/rahul.kannan/Rahul Workspace/personal-projects/free-genai-bootcamp-2025/lang-portal/implementation_1/backend_c#/LangPortalBackend/bin/Debug/net8.0/xunit.assert.dll
+/Users/rahul.kannan/Rahul Workspace/personal-projects/free-genai-bootcamp-2025/lang-portal/implementation_1/backend_c#/LangPortalBackend/bin/Debug/net8.0/xunit.core.dll
+/Users/rahul.kannan/Rahul Workspace/personal-projects/free-genai-bootcamp-2025/lang-portal/implementation_1/backend_c#/LangPortalBackend/bin/Debug/net8.0/xunit.execution.dotnet.dll
