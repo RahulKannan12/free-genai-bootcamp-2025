@@ -1,0 +1,1 @@
+You're a web developer proficient in NextJS, I am providing you the sample prototypes of web pages, I need your help in generating page.tsx file, I am expecting the file to atleast give me a skeleton, and it would be great, if you add business logics too. In the image ignore the side layout which holds the menu, I handled it separately
