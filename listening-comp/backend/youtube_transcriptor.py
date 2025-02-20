@@ -20,9 +20,9 @@ def save_transcript(youtube_url, transcript):
         os.makedirs(os.path.dirname(file_path), exist_ok=True)
         with open(file_path, 'w') as file:
             file.write(transcript)
-        return "Transcript saved successfully!"
+        return True,video_id
     except Exception as e:
-        return f"Error saving transcript: {e}"
+        return False,f"Error saving transcript: {e}"
 
 # Test case
 if __name__ == "__main__":

@@ -4,6 +4,7 @@ sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
 import streamlit as st
 from backend.youtube_transcriptor import get_transcript, save_transcript
+from backend.data_structurer import DataStructurer
 
 # Page config
 st.set_page_config(
@@ -25,12 +26,24 @@ def pull_transcript():
 
     if st.session_state.transcript:
         if st.button("Save Transcript"):
-            result = save_transcript(youtube_url, st.session_state.transcript)
-            st.write(result)
+            success, result = save_transcript(youtube_url, st.session_state.transcript)
+            message = "Saved Successfully" if success else "Error saving the file"
+            if success:
+                st.session_state.record = result
+            st.write(message)
 
 def structure_data():
     st.subheader("Structure Data")
-    st.write("This is the Structure Data screen. Add your code for Structure Data here.")
+    
+    if('record') not in st.session_state:
+        st.session_state.record = ""
+
+    if st.session_state.record:
+        if st.button("Structure Data"):
+            print(st.session_state.record)
+            sd = DataStructurer(st.session_state.record)
+            result = sd.structure_data()
+            st.write(result)
 
 def rag_part():
     st.subheader("RAG Part")
