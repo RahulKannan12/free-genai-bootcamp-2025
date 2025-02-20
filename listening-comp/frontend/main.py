@@ -34,6 +34,7 @@ def pull_transcript():
 
 def structure_data():
     st.subheader("Structure Data")
+    sd = DataStructurer(st.session_state.record)
     
     if('record') not in st.session_state:
         st.session_state.record = ""
@@ -41,9 +42,18 @@ def structure_data():
     if st.session_state.record:
         if st.button("Structure Data"):
             print(st.session_state.record)
-            sd = DataStructurer(st.session_state.record)
             result = sd.structure_data()
             st.write(result)
+            st.session_state.structured_data = result
+
+    if 'structured_data' not in st.session_state:
+        st.session_state.structured_data = ""
+
+    if st.session_state.structured_data:
+        if st.button("Save Structured Data"):
+            success, result = sd.save_structured_data(st.session_state.structured_data)
+            message = "Saved Successfully" if success else "Error saving the file"
+            st.write(message)
 
 def rag_part():
     st.subheader("RAG Part")

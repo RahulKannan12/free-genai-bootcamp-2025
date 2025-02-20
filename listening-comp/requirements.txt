@@ -3,3 +3,7 @@ watchdog
 youtube-transcript-api
 ollama
 chromadb
+transformers
+accelerate
+openai
+python-dotenv
