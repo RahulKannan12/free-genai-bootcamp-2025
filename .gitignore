@@ -172,3 +172,6 @@ cython_debug/
 
 # PyPI configuration file
 .pypirc
+lang-portal/implementation_1/frontend-nextjs/lang-portal-frontend/.next/trace
+.DS_Store
+.DS_Store
