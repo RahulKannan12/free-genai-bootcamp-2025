@@ -1,1 +1,5 @@
 streamlit
+watchdog
+youtube-transcript-api
+ollama
+chromadb
