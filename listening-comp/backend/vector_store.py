@@ -81,8 +81,7 @@ class LocalEmbeddingFunction(embedding_functions.EmbeddingFunction):
         return embeddings
 
 class VectorStore:
-    def __init__(self, record :str, persist_directory: str = "backend/data/vectorstore"):
-        self.record = record
+    def __init__(self, persist_directory: str = "backend/data/vectorstore"):
         self.client = chromadb.PersistentClient(path=persist_directory)
         self.persist_directory = persist_directory
         self.embedding_fn = LocalEmbeddingFunction()
@@ -99,25 +98,25 @@ class VectorStore:
             )
         }
 
-    def index_questions_file(self):
+    def index_questions_file(self, record):
         try:
-            filename = "backend/data/structured_data/" + self.record + ".txt"
-            print(filename)
+            filename = "backend/data/structured_data/" + record + ".txt"
+    
             # Parse questions from file
             questions = parse_file(filename)
-            print(questions)
+            # print(questions)
 
             # Add to vector store
             if questions:
-                self.add_questions(questions)
-                print(f"Indexed {len(questions)} questions from {filename}")
+                self.add_questions(record, questions)
+                # print(f"Indexed {len(questions)} questions from {filename}")
             
             return True
         except Exception as e:
             print(f"Error indexing questions: {str(e)}")
             return False
 
-    def add_questions(self, questions: List[Questions]):
+    def add_questions(self, record : str, questions: List[Questions]):
         """Add questions to the vector store"""
         ids = []
         documents = []
@@ -129,12 +128,12 @@ class VectorStore:
                 if question.section_name != section:
                     continue
                 # Create a unique ID for each question
-                question_id = f"{self.record}_{question.section_name}_{idx}"
+                question_id = f"{record}_{question.section_name}_{idx}"
                 ids.append(question_id)
                 
                 # Store the full question structure as metadata
                 metadatas.append({
-                    "video_id": self.record,
+                    "video_id": record,
                     "section": question.section_name,
                     "question_index": idx,
                     "full_structure": json.dumps(question.question_model.to_dict())
@@ -155,10 +154,10 @@ class VectorStore:
                 documents.append(document)
             
             # Add to collection
-            print("Adding to collection:")
-            print(f"IDs: {ids}")
-            print(f"Documents: {documents}")
-            print(f"Metadatas: {metadatas}")
+            # print("Adding to collection:")
+            # print(f"IDs: {ids}")
+            # print(f"Documents: {documents}")
+            # print(f"Metadatas: {metadatas}")
             collection.add(
                 ids=ids,
                 documents=documents,
@@ -174,16 +173,13 @@ class VectorStore:
         """Search for similar questions in the vector store"""
         if section_num not in [2, 3]:
             raise ValueError("Only sections 2 and 3 are currently supported")
-            
+        
         collection = self.collections[f"section{section_num}"]
 
         results = collection.query(
             query_texts=[query],
             n_results=n_results
         )
-
-        print("Query results:")
-        print(results)
         
         # Convert results to more usable format
         questions = []
@@ -217,9 +213,10 @@ if __name__ == "__main__":
      # ****************************************** #
     # To test the vector store
     # ****************************************** #
-    store = VectorStore("sY7L5cfCWno")
-    store.index_questions_file()
-    similar = store.search_similar_questions(2, "誕生日について質問", n_results=1)
+    store = VectorStore()
+    store.index_questions_file("sY7L5cfCWno")
+    #similar = store.search_similar_questions(2, "誕生日について質問", n_results=1)
+    similar = store.search_similar_questions(3, "Announcements", n_results=1)
     print("###SIMILAR###")
     print(similar)
     # Write the output to a 
