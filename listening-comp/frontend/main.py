@@ -65,10 +65,10 @@ def rag_part():
         st.write("no structured data is available for the session, structure the data first")
         return
     
-    vs = VectorStore(record = st.session_state.record)
+    vs = VectorStore()
 
     if st.button("Index and Store Questions"):
-        result = vs.index_questions_file()
+        result = vs.index_questions_file(record = st.session_state.record)
         message = "Indexed and Saved Successfully" if result else "Error saving/indexing the file"
         st.write(message)
 
