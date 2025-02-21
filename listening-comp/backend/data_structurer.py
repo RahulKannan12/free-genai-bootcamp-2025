@@ -42,6 +42,7 @@ class DataStructurer:
 
             Format each question exactly like this:
 
+            <section_name = "問題1">
             <question>
             Introduction:
             [the situation setup in japanese]
@@ -58,6 +59,7 @@ class DataStructurer:
             3. [third option in japanese]
             4. [fourth option in japanese]
             </question>
+            </section_name>
 
             Rules:
             - Only extract questions from the 問題1 section
@@ -89,6 +91,7 @@ class DataStructurer:
 
             Format each question exactly like this:
 
+            <section_name="問題2">
             <question>
             Introduction:
             [the situation setup in japanese]
@@ -99,6 +102,7 @@ class DataStructurer:
             Question:
             [the question being asked in japanese]
             </question>
+            </section_name>
 
             Rules:
             - Only extract questions from the 問題2 section
@@ -112,6 +116,7 @@ class DataStructurer:
             3: """Extract all questions from section 問題3 of this JLPT transcript.
             Format each question exactly like this:
 
+            <section_name="問題3">
             <question>
             Situation:
             [the situation in japanese where a phrase is needed]
@@ -119,6 +124,7 @@ class DataStructurer:
             Question:
             何と言いますか
             </question>
+            </section_name>
 
             Rules:
             - Only extract questions from the 問題3 section
@@ -156,12 +162,12 @@ class DataStructurer:
         # Parse response JSON
         response_json = response.json()
 
-        print(response_json)
+        # print(response_json)
 
         # Extract text from the first choice
         text = response_json["choices"][0]["text"] if "choices" in response_json and response_json["choices"] else "No response text found"
 
-        print(text)
+        # print(text)
         return text
 
     
@@ -180,7 +186,7 @@ class DataStructurer:
     def save_structured_data(self, structured_data : str):
         try:
             file_path = os.path.join(os.path.dirname(__file__), 'data', 'structured_data', f'{self.record}.txt')
-            print(file_path)
+            # print(file_path)
             os.makedirs(os.path.dirname(file_path), exist_ok=True)
             with open(file_path, 'w') as file:
                 file.write(structured_data)
@@ -193,6 +199,7 @@ if __name__ == "__main__":
     sample_record = "sample_record"  # Replace with the actual record name
     data_structurer = DataStructurer('sY7L5cfCWno')
     structured_data = data_structurer.structure_data()
+    data_structurer.save_structured_data(structured_data)
     print(structured_data)
 
 
