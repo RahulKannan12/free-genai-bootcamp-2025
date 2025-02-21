@@ -20,8 +20,11 @@ class DataStructurer:
         #     input=data
         # )
         # return response['response']
-        prompt = {
-            1: """Extract questions from section 問題1 of this JLPT transcript where the answer can be determined solely from the conversation without needing visual aids.
+        prompt = """
+
+            Strictly follow the format, this is very important rule to follow
+
+            Extract questions from section 問題1 of this JLPT transcript where the answer can be determined solely from the conversation without needing visual aids.
             
             ONLY include questions that meet these criteria:
             - The answer can be determined purely from the spoken dialogue
@@ -68,9 +71,9 @@ class DataStructurer:
             - Do not translate any Japanese text
             - Do not include any section descriptions or other text
             - Output questions one after another with no extra text between them
-            """,
             
-            2: """Extract questions from section 問題2 of this JLPT transcript where the answer can be determined solely from the conversation without needing visual aids.
+            
+            2: Extract questions from section 問題2 of this JLPT transcript where the answer can be determined solely from the conversation without needing visual aids.
             
             ONLY include questions that meet these criteria:
             - The answer can be determined purely from the spoken dialogue
@@ -111,9 +114,9 @@ class DataStructurer:
             - Do not translate any Japanese text
             - Do not include any section descriptions or other text
             - Output questions one after another with no extra text between them
-            """,
             
-            3: """Extract all questions from section 問題3 of this JLPT transcript.
+            
+            3: Extract all questions from section 問題3 of this JLPT transcript.
             Format each question exactly like this:
 
             <section_name="問題3">
@@ -133,7 +136,7 @@ class DataStructurer:
             - Do not include any section descriptions or other text
             - Output questions one after another with no extra text between them
             """
-        }
+        
         full_prompt = f"{prompt}\n\nNo need to add reasoning in the response\n\nHere's the transcript:\n{data}"
         # completion = self.client.completions.create(
         #     extra_headers={
