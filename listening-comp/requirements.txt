@@ -7,3 +7,8 @@ transformers
 accelerate
 openai
 python-dotenv
+soundfile
+torch
+datasets
+sentencepiece
+lorem

@@ -1,5 +1,7 @@
 import sys
 import os
+import torch
+from datasets import load_dataset
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
 import streamlit as st
@@ -7,6 +9,9 @@ from backend.youtube_transcriptor import get_transcript, save_transcript
 from backend.data_structurer import DataStructurer
 from backend.vector_store import VectorStore
 from backend.question_generator import QuestionGenerator
+from backend.speech_synthesizer import SoundSynthesizer
+
+torch.classes.__path__ = []
 
 # Page config
 st.set_page_config(
@@ -14,6 +19,16 @@ st.set_page_config(
     page_icon="🎧",
     layout="wide"
 )
+
+if 'audio_generator' not in st.session_state:
+    st.session_state.audio_generator = SoundSynthesizer()
+
+@st.cache_resource
+def get_synthesizer():
+    synthesizer = SoundSynthesizer()
+    synthesizer.load_models()
+    return synthesizer
+
 
 def pull_transcript():
     st.subheader("Pull Transcript")
@@ -38,7 +53,7 @@ def structure_data():
     st.subheader("Structure Data")
     
     
-    if('record') not in st.session_state:
+    if 'record' not in st.session_state:
         st.write("no transcript available for the session, load and save transcript first")
         return
 
@@ -62,7 +77,7 @@ def structure_data():
 
 def rag_part():
     st.subheader("Indexing and Storing")
-    if('record') not in st.session_state:
+    if 'record' not in st.session_state:
         st.write("no structured data is available for the session, structure the data first")
         return
     
@@ -72,6 +87,28 @@ def rag_part():
         result = vs.index_questions_file(record = st.session_state.record)
         message = "Indexed and Saved Successfully" if result else "Error saving/indexing the file"
         st.write(message)
+
+def get_audio_download_link(filename):
+    href = f'<a href="{filename}">Download audio</a>'
+    return href
+
+def convert_question_to_text(question):
+    print('in method')
+    print(question)
+    text = ""
+    if question.get("Introduction"):
+        text += f"Introduction: {question.get('Introduction')}\n"
+    if question.get("Situation"):
+        text += f"Situation: {question.get('Situation')}\n"
+    if question.get("Conversation"):
+        text += f"Conversation: {question.get('Conversation')}\n"
+    if question.get("Question"):
+        text += f"Question: {question.get('Question')}\n"
+    if question.get("Options"):
+        text += "Options:\n"
+        for option in question.get("Options", []):
+            text += f"{option['number']}. {option['value']}\n"
+    return text
 
 def interactive_learning():
     st.subheader("Interactive Learning")
@@ -89,6 +126,8 @@ def interactive_learning():
         st.session_state.current_question_answer = None
     if 'submitted' not in st.session_state:
         st.session_state.submitted = False
+    if 'current_audio' not in st.session_state:
+        st.session_state.current_audio = None
     
     practice_type = st.selectbox(
         "Select Practice Type",
@@ -129,11 +168,43 @@ def interactive_learning():
             st.write(f"**Question:** {question.get('Question')}")
         if question.get("Options"):
             st.write("**Options:**")
-            for option in question.get("Options", []):
-                st.write(f"{option['number']}. {option['value']}")
+            # for option in question.get("Options", []):
+            #     st.write(f"{option['number']}. {option['value']}")
                 # st.session_state.current_question_options.append((option['value'], option['number']))
         if question.get("Answer"):
             st.session_state.current_question_answer = question.get("Answer")
+        
+        if st.session_state.current_audio:
+            st.audio(st.session_state.current_audio)
+
+        if st.button("Generate Audio"):
+            print('here1')
+            with st.spinner("Generating audio..."):
+                try:
+                    if st.session_state.current_audio and os.path.exists(st.session_state.current_audio):
+                        try:
+                            os.unlink(st.session_state.current_audio)
+                        except Exception:
+                            pass
+                        st.session_state.current_audio = None
+                        
+                    # Generate new audio
+                    print(st.session_state.current_question)
+                    audio_file = st.session_state.synthesizer.generate_speech(
+                        convert_question_to_text(st.session_state.current_question),
+                        embeddings=st.session_state.speaker_embeddings
+                    )
+                            
+                    # Verify the audio file exists
+                    if not os.path.exists(audio_file):
+                        raise Exception("Audio file was not created")
+                        
+                    st.session_state.current_audio = audio_file
+                except Exception as e:
+                    st.error(f"Error generating audio: {str(e)}")
+                    # Clear the audio state on error
+                    st.session_state.current_audio = None
+
         
         if st.session_state.current_question_answer and st.session_state.submitted:
                 correct_answer = int(st.session_state.current_question_answer) - 1
@@ -169,6 +240,9 @@ def interactive_learning():
 
 def main():
     st.title("JLPT Listening Practice")
+    st.session_state.synthesizer = get_synthesizer()
+    embeddings_dataset = load_dataset("Matthijs/cmu-arctic-xvectors", split="validation")
+    st.session_state.speaker_embeddings = torch.tensor(embeddings_dataset[7306]["xvector"]).unsqueeze(0)
 
     # Sidebar menu
     st.sidebar.markdown("## Menu")

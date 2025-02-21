@@ -2,7 +2,7 @@ from dotenv import load_dotenv
 import os
 import requests
 import json
-from vector_store import VectorStore
+from backend.vector_store import VectorStore
 import random
 import re
 
@@ -37,7 +37,7 @@ class QuestionGenerator:
         # print(text)
         return text
     
-    def generate_questions(self, section_num, topic):
+    def generate_questions(self, section_num, topic) :
         similar_questions = self.vector_store.search_similar_questions(section_num, topic, n_results=3)
 
         if not similar_questions:
@@ -82,7 +82,7 @@ class QuestionGenerator:
         New Question:
         """
 
-        response = self.ask_model(prompt)
+        #response = self.ask_model(prompt)
 
         ## Test Response for Section 3
         # response = """
@@ -98,19 +98,19 @@ class QuestionGenerator:
         # """
 
         ## Test Response for Section 2
-        # response = """
-        # Introduction: 男の人は何を飲みますか
+        response = """
+        Introduction: 男の人は何を飲みますか
 
-        # Conversation: いらっしゃいませ。ご注文はお決まりですか？ はい、私はコーヒーをください。 私はオレンジジュースをお願いします。 わかりました。 それでは、合計で二つで。すいません、私、ちょっと喉が渇いたので、もう一杯飲み物を注文してもいいですか？ もちろん！ 何になさいますか？ じゃあ、私はアイスティーにします。 ありがとうございます。
+        Conversation: いらっしゃいませ。ご注文はお決まりですか？ はい、私はコーヒーをください。 私はオレンジジュースをお願いします。 わかりました。 それでは、合計で二つで。すいません、私、ちょっと喉が渇いたので、もう一杯飲み物を注文してもいいですか？ もちろん！ 何になさいますか？ じゃあ、私はアイスティーにします。 ありがとうございます。
 
-        # Answer: Option 3
+        Answer: Option 3
 
-        # Options:
-        # 1. コーヒー
-        # 2. オレンジジュース
-        # 3. アイスティー
-        # 4. もう一杯
-        # """
+        Options:
+        1. コーヒー
+        2. オレンジジュース
+        3. アイスティー
+        4. もう一杯
+        """
         #print(response)
 
         # Parse the response
@@ -118,9 +118,10 @@ class QuestionGenerator:
         response_obj = {
             "Introduction": None,
             "Conversation": None,
+            "Situation": None,
+            "Question": None,
             "Answer": None,
             "Options": [],
-            "Situation": None
         }
         
         for line in response_lines:
@@ -155,8 +156,34 @@ class QuestionGenerator:
             response_obj["Situation"] = None
 
         print(json.dumps(response_obj, indent=4, ensure_ascii=False))
+        #return response_obj
+        return {
+            "Introduction": "男の人は何を飲みますか",
+            "Conversation": "いらっしゃいませ。ご注文はお決まりですか？ はい、私はコーヒーをください。 私はオレンジジュースをお願いします。 わかりました。 それでは、合計で二つで。すいません、私、ちょっと喉が渇いたので、もう一杯飲み物を注文してもいいですか？ もちろん！ 何になさいますか？ じゃあ、私はアイスティーにします。 ありがとうございます。",
+            "Answer": "3",
+            "Options": [
+                {
+                    "number": 1,
+                    "value": "コーヒー"
+                },
+                {
+                    "number": 2,
+                    "value": "オレンジジュース"
+                },
+                {
+                    "number": 3,
+                    "value": "アイスティー"
+                },
+                {
+                    "number": 4,
+                    "value": "もう一杯"
+                }
+            ],
+            "Situation": None,
+            "Question": "何を飲みますか"
+        }
 
 if __name__ == "__main__":
     qg = QuestionGenerator()
     #qg.generate_questions(2, "restaurant")
-    qg.generate_questions(3, "Announcements")
+    print(qg.generate_questions(3, "Announcements"))
