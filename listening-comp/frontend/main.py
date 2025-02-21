@@ -5,6 +5,7 @@ sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 import streamlit as st
 from backend.youtube_transcriptor import get_transcript, save_transcript
 from backend.data_structurer import DataStructurer
+from backend.vector_store import VectorStore
 
 # Page config
 st.set_page_config(
@@ -34,10 +35,13 @@ def pull_transcript():
 
 def structure_data():
     st.subheader("Structure Data")
-    sd = DataStructurer(st.session_state.record)
+    
     
     if('record') not in st.session_state:
-        st.session_state.record = ""
+        st.write("no transcript available for the session, load and save transcript first")
+        return
+
+    sd = DataStructurer(st.session_state.record)
 
     if st.session_state.record:
         if st.button("Structure Data"):
@@ -56,8 +60,17 @@ def structure_data():
             st.write(message)
 
 def rag_part():
-    st.subheader("RAG Part")
-    st.write("This is the RAG Part screen. Add your code for RAG Part here.")
+    st.subheader("Indexing and Storing")
+    if('record') not in st.session_state:
+        st.write("no structured data is available for the session, structure the data first")
+        return
+    
+    vs = VectorStore(record = st.session_state.record)
+
+    if st.button("Index and Store Questions"):
+        result = vs.index_questions_file()
+        message = "Indexed and Saved Successfully" if result else "Error saving/indexing the file"
+        st.write(message)
 
 def interactive_learning():
     st.subheader("Interactive Learning")
@@ -68,14 +81,14 @@ def main():
 
     # Sidebar menu
     st.sidebar.markdown("## Menu")
-    menu = ["Pull Transcript", "Structure Data", "RAG Part", "Interactive Learning"]
+    menu = ["Pull Transcript", "Structure Data", "Indexing & Storing", "Interactive Learning"]
     choice = st.sidebar.radio("", menu)
 
     # Dictionary to map menu choices to functions
     menu_functions = {
         "Pull Transcript": pull_transcript,
         "Structure Data": structure_data,
-        "RAG Part": rag_part,
+        "Indexing & Storing": rag_part,
         "Interactive Learning": interactive_learning
     }
 

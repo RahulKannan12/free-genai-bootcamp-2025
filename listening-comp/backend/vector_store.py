@@ -99,17 +99,23 @@ class VectorStore:
             )
         }
 
-    def index_questions_file(self, filename: str):
-        filename = "backend/data/structured_data/" + self.record + ".txt"
-        print(filename)
-        # Parse questions from file
-        questions = parse_file(filename)
-        print(questions)
+    def index_questions_file(self):
+        try:
+            filename = "backend/data/structured_data/" + self.record + ".txt"
+            print(filename)
+            # Parse questions from file
+            questions = parse_file(filename)
+            print(questions)
 
-        # Add to vector store
-        if questions:
-            self.add_questions(questions)
-            print(f"Indexed {len(questions)} questions from {filename}")
+            # Add to vector store
+            if questions:
+                self.add_questions(questions)
+                print(f"Indexed {len(questions)} questions from {filename}")
+            
+            return True
+        except Exception as e:
+            print(f"Error indexing questions: {str(e)}")
+            return False
 
     def add_questions(self, questions: List[Questions]):
         """Add questions to the vector store"""
@@ -157,21 +163,6 @@ class VectorStore:
                 ids=ids,
                 documents=documents,
                 metadatas=metadatas
-            )
-
-    def add_documents(self, documents):
-        for i, d in enumerate(documents):
-            response = ollama.embed(model="mxbai-embed-large", input=d)
-            embeddings = response["embeddings"]
-            # Flatten the embeddings if they are nested
-            if isinstance(embeddings[0], list):
-                embeddings = [item for sublist in embeddings for item in sublist]
-            if not isinstance(embeddings, list) or not all(isinstance(e, float) for e in embeddings):
-                raise ValueError("Embeddings must be a list of floats.")
-            self.collection.add(
-                ids=[str(i)],
-                embeddings=[embeddings],
-                documents=[d]
             )
 
     def search_similar_questions(
@@ -227,7 +218,7 @@ if __name__ == "__main__":
     # To test the vector store
     # ****************************************** #
     store = VectorStore("sY7L5cfCWno")
-    store.index_questions_file("backend/data/structured_data/sY7L5cfCWno.txt")
+    store.index_questions_file()
     similar = store.search_similar_questions(2, "誕生日について質問", n_results=1)
     print("###SIMILAR###")
     print(similar)
