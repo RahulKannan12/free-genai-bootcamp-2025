@@ -116,3 +116,5 @@ dmypy.json
 cython_debug/
 
 .env
+
+backend/data/

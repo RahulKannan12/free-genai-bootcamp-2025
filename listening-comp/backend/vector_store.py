@@ -2,6 +2,9 @@ import re
 from typing import List, Optional
 import ollama
 import chromadb
+from chromadb.utils import embedding_functions
+from typing import Dict, List, Optional
+import json
 
 class QuestionModel:
     def __init__(self, introduction: Optional[str], conversation: Optional[str], question: Optional[str], options: Optional[List[str]], situation: Optional[str]):
@@ -10,6 +13,15 @@ class QuestionModel:
         self.question = question
         self.options = options
         self.situation = situation
+
+    def to_dict(self):
+        return {
+            "introduction": self.introduction,
+            "conversation": self.conversation,
+            "question": self.question,
+            "options": self.options,
+            "situation": self.situation
+        }
 
 class Questions:
     def __init__(self, section_name: str, question_model: QuestionModel):
@@ -47,61 +59,156 @@ def parse_file(file_path: str) -> List[Questions]:
 
     return questions_list
 
+class LocalEmbeddingFunction(embedding_functions.EmbeddingFunction):
+    def __init__(self, model_id="mxbai-embed-large"):
+        self.model_id = model_id
+
+    def __call__(self, texts: List[str]) -> List[List[float]]:
+        """Generate embeddings for a list of texts using Bedrock"""
+        embeddings = []
+        for text in texts:
+            try:
+                response = ollama.embed(model=self.model_id, input=text)
+                embedding = response["embeddings"]
+                # Flatten the embeddings if they are nested
+                if isinstance(embedding[0], list):
+                    embedding = [item for sublist in embedding for item in sublist]
+                embeddings.append(embedding)
+            except Exception as e:
+                print(f"Error generating embedding: {str(e)}")
+                # Return a zero vector as fallback
+                embeddings.append([0.0] * 1536)  # Titan model uses 1536 dimensions
+        return embeddings
 
 class VectorStore:
-    def __init__(self):
-        self.client = chromadb.Client()
-        self.collection = self.client.create_collection(name="docs")
+    def __init__(self, record :str, persist_directory: str = "backend/data/vectorstore"):
+        self.record = record
+        self.client = chromadb.PersistentClient(path=persist_directory)
+        self.persist_directory = persist_directory
+        self.embedding_fn = LocalEmbeddingFunction()
+        self.collections = {
+            "section2": self.client.get_or_create_collection(
+                name="section2_questions",
+                embedding_function=self.embedding_fn,
+                metadata={"description": "JLPT listening comprehension questions - Section 2"}
+            ),
+            "section3": self.client.get_or_create_collection(
+                name="section3_questions",
+                embedding_function=self.embedding_fn,
+                metadata={"description": "JLPT phrase matching questions - Section 3"}
+            )
+        }
+
+    def index_questions_file(self, filename: str):
+        filename = "backend/data/structured_data/" + self.record + ".txt"
+        print(filename)
+        # Parse questions from file
+        questions = parse_file(filename)
+        print(questions)
+
+        # Add to vector store
+        if questions:
+            self.add_questions(questions)
+            print(f"Indexed {len(questions)} questions from {filename}")
+
+    def add_questions(self, questions: List[Questions]):
+        """Add questions to the vector store"""
+        ids = []
+        documents = []
+        metadatas = []
+        
+        for section in ['2', '3']:
+            collection = self.collections[f"section{section}"]
+            for idx, question in enumerate(questions):
+                if question.section_name != section:
+                    continue
+                # Create a unique ID for each question
+                question_id = f"{self.record}_{question.section_name}_{idx}"
+                ids.append(question_id)
+                
+                # Store the full question structure as metadata
+                metadatas.append({
+                    "video_id": self.record,
+                    "section": question.section_name,
+                    "question_index": idx,
+                    "full_structure": json.dumps(question.question_model.to_dict())
+                })
+                
+                # Create a searchable document from the question content
+                if question.section_name == '2':
+                    document = f"""
+                    Situation: {question.question_model.introduction}
+                    Dialogue: {question.question_model.conversation}
+                    Question: {question.question_model.question}
+                    """
+                else:  # section 3
+                    document = f"""
+                    Situation: {question.question_model.situation}
+                    Question: {question.question_model.question}
+                    """
+                documents.append(document)
+            
+            # Add to collection
+            print("Adding to collection:")
+            print(f"IDs: {ids}")
+            print(f"Documents: {documents}")
+            print(f"Metadatas: {metadatas}")
+            collection.add(
+                ids=ids,
+                documents=documents,
+                metadatas=metadatas
+            )
 
     def add_documents(self, documents):
         for i, d in enumerate(documents):
             response = ollama.embed(model="mxbai-embed-large", input=d)
             embeddings = response["embeddings"]
-            if not isinstance(embeddings, list) or not all(isinstance(e, list) for e in embeddings):
-                raise ValueError("Embeddings must be a list of lists of floats.")
+            # Flatten the embeddings if they are nested
+            if isinstance(embeddings[0], list):
+                embeddings = [item for sublist in embeddings for item in sublist]
+            if not isinstance(embeddings, list) or not all(isinstance(e, float) for e in embeddings):
+                raise ValueError("Embeddings must be a list of floats.")
             self.collection.add(
                 ids=[str(i)],
-                embeddings=embeddings,
+                embeddings=[embeddings],
                 documents=[d]
             )
 
-    def query_document(self, input):
-        response = ollama.embed(model="mxbai-embed-large", input=input)
-        embeddings = response["embeddings"]
-        if not isinstance(embeddings, list) or not all(isinstance(e, list) for e in embeddings):
-            raise ValueError("Embeddings must be a list of lists of floats.")
-        results = self.collection.query(
-            query_embeddings=embeddings,
-            n_results=1
-        )
-        data = results['documents'][0][0]
-        return data
+    def search_similar_questions(
+        self, 
+        section_num: int, 
+        query: str, 
+        n_results: int = 5
+    ) -> List[Dict]:
+        """Search for similar questions in the vector store"""
+        if section_num not in [2, 3]:
+            raise ValueError("Only sections 2 and 3 are currently supported")
+            
+        collection = self.collections[f"section{section_num}"]
 
-    def generate_response(self, input, data):
-        output = ollama.generate(
-            model="llama3.2:1b",
-            prompt=f"Using this data: {data}. Respond to this prompt: {input}"
+        results = collection.query(
+            query_texts=[query],
+            n_results=n_results
         )
-        return output['response']
+
+        print("Query results:")
+        print(results)
+        
+        # Convert results to more usable format
+        questions = []
+        for idx, metadata in enumerate(results['metadatas'][0]):
+            question_data = json.loads(metadata['full_structure'])
+            question_data['similarity_score'] = results['distances'][0][idx]
+            questions.append(question_data)
+            
+        return questions
+
+    def write_output_to_file(self, output: List[Dict], file_path: str):
+        with open(file_path, 'w', encoding='utf-8') as file:
+            json.dump(output, file, ensure_ascii=False, indent=4)
 
 # Test case
 if __name__ == "__main__":
-    # documents = [
-    #     "Llamas are members of the camelid family meaning they're pretty closely related to vicuñas and camels",
-    #     "Llamas were first domesticated and used as pack animals 4,000 to 5,000 years ago in the Peruvian highlands",
-    #     "Llamas can grow as much as 6 feet tall though the average llama between 5 feet 6 inches and 5 feet 9 inches tall",
-    #     "Llamas weigh between 280 and 450 pounds and can carry 25 to 30 percent of their body weight",
-    #     "Llamas are vegetarians and have very efficient digestive systems",
-    #     "Llamas live to be about 20 years old, though some only live for 15 years and others live to be 30 years old",
-    # ]
-
-    # data_structurer = DataStructurer()
-    # data_structurer.add_documents(documents)
-    # input = "What animals are llamas related to?"
-    # data = data_structurer.query_document(input)
-    # response = data_structurer.generate_response(input, data)
-    # print(response)
-
     # ****************************************** #
     # To test the parsing logic 
     # ****************************************** #
@@ -115,5 +222,18 @@ if __name__ == "__main__":
     #     print(f"Options: {q.question_model.options}")
     #     print(f"Situation: {q.question_model.situation}")
     #     print()
+    # ****************************************** #
+     # ****************************************** #
+    # To test the vector store
+    # ****************************************** #
+    store = VectorStore("sY7L5cfCWno")
+    store.index_questions_file("backend/data/structured_data/sY7L5cfCWno.txt")
+    similar = store.search_similar_questions(2, "誕生日について質問", n_results=1)
+    print("###SIMILAR###")
+    print(similar)
+    # Write the output to a 
+    #output_file_path = "backend/data/output/similar_questions.json"
+    #store.write_output_to_file(similar, output_file_path)
+    #print(f"Output written to {output_file_path}")
     # ****************************************** #
 
