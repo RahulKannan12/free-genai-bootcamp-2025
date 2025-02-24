@@ -1,0 +1,7 @@
+gradio
+requests
+flask
+jsonify
+dotenv
+requests
+manga-ocr>=0.1.8
